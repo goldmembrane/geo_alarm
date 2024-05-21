@@ -16,7 +16,7 @@ const GoogleMaps = ():JSX.Element => {
     // google map api
     const { isLoaded } = useJsApiLoader({
         id: 'geo-alarm',
-        googleMapsApiKey: 'AIzaSyDyBGJQRoi8GoONZg-atFahuKhP01f9O0M'
+        googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAP_API || ''
     })
 
     // google map initialize
