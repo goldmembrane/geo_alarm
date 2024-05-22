@@ -1,18 +1,19 @@
 'use client';
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 
 const containerStyle = {
-    width: '1000px',
-    height: '500px',
+    width: '100%',
+    height: '100vh',
 }
 
 const center = {
-    lat: -3.745,
-    lng: -38.523
+    lat: 35.68125171209752,
+    lng: 139.76712335330515
 }
 
 const GoogleMaps = ():JSX.Element => {
+
     // google map api
     const { isLoaded } = useJsApiLoader({
         id: 'geo-alarm',
@@ -34,11 +35,22 @@ const GoogleMaps = ():JSX.Element => {
         setMap(null);
     }, []);
 
+    // get current position
+    const [currentPosition, setCurrentPosition] = useState<any>({})
+
+    useEffect(() => {
+        if(navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                setCurrentPosition({lat: position.coords.latitude, lng: position.coords.longitude})
+            })
+        }
+    }, [currentPosition])
+
     return isLoaded ? (
         <GoogleMap
             mapContainerStyle={containerStyle}
-            center={center}
-            zoom={10}
+            center={currentPosition}
+            zoom={18}
             onLoad={onLoad}
             onUnmount={onUnmount}
         >
