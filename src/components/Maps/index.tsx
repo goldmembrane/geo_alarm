@@ -50,7 +50,7 @@ const GoogleMaps = ():JSX.Element => {
         <GoogleMap
             mapContainerStyle={containerStyle}
             center={currentPosition}
-            zoom={18}
+            zoom={17}
             onLoad={onLoad}
             onUnmount={onUnmount}
         >
