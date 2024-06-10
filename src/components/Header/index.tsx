@@ -3,6 +3,8 @@ import Drawer from '@mui/material/Drawer';
 import { Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
 import InboxIcon from '@mui/icons-material/Inbox';
 import MailIcon from '@mui/icons-material/Mail';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 
 const HeaderDrawer = ():JSX.Element =>  {
     const [open, setOpen] = useState<boolean>(false);
@@ -14,31 +16,19 @@ const HeaderDrawer = ():JSX.Element =>  {
     const DrawerList = (
         <>
             <div style = {{ width: '250px'}} onClick={() => toggleDrawer(false)}>
-                <List>
-                {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                <ListItem key={text} disablePadding>
-                    <ListItemButton>
-                    <ListItemIcon>
-                        {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                    </ListItemIcon>
-                    <ListItemText primary={text} />
-                    </ListItemButton>
-                </ListItem>
-                ))}
-            </List>
+                <div style = {{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '50px', flexDirection: 'column'}}>
+                    <AccountCircleIcon style = {{ width: '50px', height: '50px', cursor: 'pointer'}}/>
+
+                    <div style = {{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '20px', marginBottom: '10px', cursor: 'pointer'}}>
+                        <span style = {{ fontSize: '20px' }}>로그인 하기</span>
+                    </div>
+                </div>
             <Divider />
-            <List>
-                {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                <ListItem key={text} disablePadding>
-                    <ListItemButton>
-                    <ListItemIcon>
-                        {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                    </ListItemIcon>
-                    <ListItemText primary={text} />
-                    </ListItemButton>
-                </ListItem>
-                ))}
-                </List>
+                <div style = {{ marginTop: '20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0px 20px', cursor: 'pointer'}}>
+                    <FormatListBulletedIcon style = {{ width: '30px', height: '30px'}}/>
+
+                    <span style = {{ fontSize: '20px' }}>즐겨찾기 목록</span>
+                </div>
             </div>
         </>
     )
