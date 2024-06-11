@@ -1,62 +1,49 @@
 'use client';
 import React, { useEffect, useState } from "react";
-import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
+import GoogleMapReact from 'google-map-react';
 
-const containerStyle = {
-    width: '100%',
-    height: '100vh',
-}
-
-const center = {
-    lat: 35.68125171209752,
-    lng: 139.76712335330515
-}
 
 const GoogleMaps = ():JSX.Element => {
 
-    // google map api
-    const { isLoaded } = useJsApiLoader({
-        id: 'geo-alarm',
-        googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAP_API || ''
-    })
+    /** 기본 지도 설정 값 */
+    const defaultProps = {
+        center: {
+            lat: 37.514575,
+            lng: 127.0495556
+        },
+        zoom: 11
+    };
 
-    // google map initialize
-    const [map, setMap] = useState(null)
-
-    const onLoad = React.useCallback(function callback(map: any) {
-
-        const bounds = new window.google.maps.LatLngBounds(center);
-        map.fitBounds(bounds);
-
-        setMap(map)
-    }, []);
-
-    const onUnmount = React.useCallback(function callback(map : any) {
-        setMap(null);
-    }, []);
-
-    // get current position
-    const [currentPosition, setCurrentPosition] = useState<any>({})
+    const [currentPosition, setCurrentPosition] = useState<any>({});
 
     useEffect(() => {
         if(navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition((position) => {
-                setCurrentPosition({lat: position.coords.latitude, lng: position.coords.longitude})
-            })
+            navigator.geolocation.getCurrentPosition(getCurrentPositionSuccess)
         }
-    }, [currentPosition])
+    }, [])
 
-    return isLoaded ? (
-        <GoogleMap
-            mapContainerStyle={containerStyle}
-            center={currentPosition}
-            zoom={17}
-            onLoad={onLoad}
-            onUnmount={onUnmount}
-        >
-            <></>
-        </GoogleMap>
-    ) : <></>
+    /** 현재 위치 불러오기 성공 시 호출되는 함수 */
+    const getCurrentPositionSuccess = (position: any) => {
+        setCurrentPosition({
+            ...currentPosition,
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+        })
+    }
+
+    return (
+        <div style = {{ width: '100%', height: '100vh' }}>
+            <GoogleMapReact
+                bootstrapURLKeys={{ key: process.env.NEXT_PUBLIC_GOOGLE_MAP_API || ''}}
+                defaultCenter={defaultProps.center}
+                defaultZoom={defaultProps.zoom}
+                center={currentPosition}
+                zoom={16}
+            >
+
+            </GoogleMapReact>
+        </div>
+    )
 }
 
 export default GoogleMaps;
