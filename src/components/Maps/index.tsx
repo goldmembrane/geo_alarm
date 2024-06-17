@@ -16,10 +16,12 @@ const GoogleMaps = ():JSX.Element => {
     };
 
     const [currentPosition, setCurrentPosition] = useState<any>({});
+    const [markerPosition, setMarkerPosition] = useState<any>({});
 
     useEffect(() => {
         if(navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(getCurrentPositionSuccess)
+            navigator.geolocation.getCurrentPosition(setUserMarkerPosition)
         }
     }, [])
 
@@ -27,6 +29,15 @@ const GoogleMaps = ():JSX.Element => {
     const getCurrentPositionSuccess = (position: any) => {
         setCurrentPosition({
             ...currentPosition,
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+        })
+    }
+
+    /** 현재 위치 불러오기 성공 시 유저 마크 생성하는 함수 */
+    const setUserMarkerPosition = (position: any) => {
+        setMarkerPosition({
+            ...markerPosition,
             lat: position.coords.latitude,
             lng: position.coords.longitude
         })
@@ -56,6 +67,15 @@ const GoogleMaps = ():JSX.Element => {
             alert('Geolocation is not supported by this browser')
         }
     }
+    /** 유저의 현재 위치를 표시하는 marker를 render하는 함수 */
+    const renderMarkers = (map: any, maps: any) => {
+        let marker = new maps.Marker({
+        position: { lat: markerPosition.lat, lng: markerPosition.lng },
+        map,
+        title: 'Hello World!'
+        });
+        return marker;
+    };
 
     return (
         <div style = {{ width: '100%', height: '100vh', position: 'relative'}}>
@@ -67,8 +87,9 @@ const GoogleMaps = ():JSX.Element => {
                 zoom={16}
                 onChange={handleMapChange}
                 yesIWantToUseGoogleMapApiInternals
-                onGoogleApiLoaded={({ map, maps }) => handleApiLoaded(map, maps)}
+                onGoogleApiLoaded={({ map, maps }) => renderMarkers(map, maps)}
             >
+            
             </GoogleMapReact>
 
             <Center moveMap={moveCenterCurrentPosition} />
