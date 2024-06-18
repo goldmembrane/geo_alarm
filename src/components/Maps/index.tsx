@@ -1,8 +1,8 @@
 'use client';
 import React, { useEffect, useState } from "react";
-import GoogleMapReact from 'google-map-react';
-import Center from "./center";
+import { GoogleMap, MarkerF, useJsApiLoader } from '@react-google-maps/api';
 
+import Center from "./center";
 
 const GoogleMaps = ():JSX.Element => {
 
@@ -15,8 +15,26 @@ const GoogleMaps = ():JSX.Element => {
         zoom: 11
     };
 
+    const [map, setMap] = useState(null);
+
     const [currentPosition, setCurrentPosition] = useState<any>({});
     const [markerPosition, setMarkerPosition] = useState<any>({});
+
+    const [markers, setMarkers] = useState<any>([]);
+
+    /** 구글 맵 클릭 시 marker를 설정하는 함수 */
+    const onMapClick = (e: any) => {
+        setMarkers((current: any) => [
+            ...current,
+            {
+                lat: e.latLng.lat(),
+                lng: e.latLng.lng()
+            }
+        ]);
+        setCurrentPosition({lat: e.latLng.lat(), lng: e.latLng.lng()})
+
+
+    }
 
     useEffect(() => {
         if(navigator.geolocation) {
@@ -43,11 +61,6 @@ const GoogleMaps = ():JSX.Element => {
         })
     }
 
-    /** 지도가 이동할 때마다 center 값을 update하는 함수 */
-    const handleMapChange = ({ center }: any) => {
-        setCurrentPosition(center)
-    }
-
     /** 유저 현재 위치를 중심으로 지도를 이동시키는 함수 */
     const moveCenterCurrentPosition = () => {
         if ( navigator.geolocation ) {
@@ -63,34 +76,35 @@ const GoogleMaps = ():JSX.Element => {
             alert('Geolocation is not supported by this browser')
         }
     }
-    /** 유저의 현재 위치를 표시하는 marker를 render하는 함수 */
-    const renderMarkers = (map: any, maps: any) => {
-        let marker = new maps.Marker({
-        position: { lat: markerPosition.lat, lng: markerPosition.lng },
-        map,
-        title: 'Hello World!'
-        });
-        return marker;
-    };
 
-    return (
-        <div style = {{ width: '100%', height: '100vh', position: 'relative'}}>
-            <GoogleMapReact
-                bootstrapURLKeys={{ key: process.env.NEXT_PUBLIC_GOOGLE_MAP_API || ''}}
-                defaultCenter={defaultProps.center}
-                defaultZoom={defaultProps.zoom}
+    const { isLoaded } = useJsApiLoader({
+        id: 'google-map-script',
+        googleMapsApiKey:  process.env.NEXT_PUBLIC_GOOGLE_MAP_API || ''
+    })
+    
+    const onUnmount = React.useCallback(function callback(map: any) {
+        setMap(null)
+    }, [])
+
+    return isLoaded ? (
+        <>
+            <GoogleMap
+                mapContainerStyle={{ width: '100%', height: '100vh', position: 'relative' }}
                 center={currentPosition}
-                zoom={16}
-                onChange={handleMapChange}
-                yesIWantToUseGoogleMapApiInternals
-                onGoogleApiLoaded={({ map, maps }) => renderMarkers(map, maps)}
+                zoom={18}
+                onUnmount={onUnmount}
+                onClick={onMapClick}
             >
-            
-            </GoogleMapReact>
 
-            <Center moveMap={moveCenterCurrentPosition} />
-        </div>
-    )
+                {markers.map((marker:any) => (
+                    <MarkerF position={{ lat: marker.lat, lng: marker.lng}} key = {marker.lat}/>
+                ))}
+
+                <Center moveMap={moveCenterCurrentPosition} />
+            </GoogleMap>
+        </>
+
+    ) : <></>
 }
 
 export default GoogleMaps;
