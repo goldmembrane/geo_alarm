@@ -43,10 +43,6 @@ const GoogleMaps = ():JSX.Element => {
         })
     }
 
-    const handleApiLoaded = (map: any, maps: any) => {
-        // Use the map and maps objects here if needed
-    };
-
     /** 지도가 이동할 때마다 center 값을 update하는 함수 */
     const handleMapChange = ({ center }: any) => {
         setCurrentPosition(center)
