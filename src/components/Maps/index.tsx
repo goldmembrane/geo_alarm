@@ -96,8 +96,16 @@ const GoogleMaps = ():JSX.Element => {
                 onClick={onMapClick}
             >
 
+                <MarkerF position={{ lat: markerPosition.lat, lng: markerPosition.lng}} />
+
                 {markers.map((marker:any) => (
-                    <MarkerF position={{ lat: marker.lat, lng: marker.lng}} key = {marker.lat}/>
+                    <MarkerF 
+                        position={{ lat: marker.lat, lng: marker.lng}}
+                        key = {marker.lat}
+                        icon={{
+                            url: "img/marker.png",
+                            scaledSize: new window.google.maps.Size(36, 48),
+                        }}/>
                 ))}
 
                 <Center moveMap={moveCenterCurrentPosition} />
