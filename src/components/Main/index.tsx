@@ -6,9 +6,10 @@ import GoogleMaps from "../Maps";
 const MainPage = ():JSX.Element => {
     return (
         <>
-            <div>홈 화면</div>
-            <HeaderDrawer />
-            <GoogleMaps />
+            <div style = {{ position: 'relative' }}>
+                <HeaderDrawer />
+                <GoogleMaps />
+            </div>
         </>
     )
 }

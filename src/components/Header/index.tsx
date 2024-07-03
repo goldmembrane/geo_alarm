@@ -36,7 +36,11 @@ const HeaderDrawer = ():JSX.Element =>  {
     return (
         <>
             <div>
-                <div style = {{ cursor: 'pointer', color: 'blue', fontSize: '20px', textAlign: 'center'}} onClick={() => toggleDrawer(true)}>OPEN DRAWER</div>
+                <div 
+                    style = {{ cursor: 'pointer', color: 'blue', fontSize: '20px', 
+                               textAlign: 'center', position: 'absolute', 
+                               top: 100, left: 20, zIndex: 999, backgroundColor: '#fff', 
+                               padding: '10px 20px', borderRadius: '15px', border: '1px solid #000' }} onClick={() => toggleDrawer(true)}>OPEN DRAWER</div>
                 <Drawer open={open} onClose={() => toggleDrawer(false)}>
                     {DrawerList}
                 </Drawer>
