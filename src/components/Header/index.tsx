@@ -1,12 +1,15 @@
 import { useState } from "react";
+import { useRouter } from "next/navigation"
+
 import Drawer from '@mui/material/Drawer';
-import { Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
-import InboxIcon from '@mui/icons-material/Inbox';
-import MailIcon from '@mui/icons-material/Mail';
+import { Divider } from "@mui/material";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 
 const HeaderDrawer = ():JSX.Element =>  {
+
+    const router = useRouter();
+
     const [open, setOpen] = useState<boolean>(false);
 
     const toggleDrawer = (newOpen: boolean) => {
@@ -17,9 +20,13 @@ const HeaderDrawer = ():JSX.Element =>  {
         <>
             <div style = {{ width: '250px'}} onClick={() => toggleDrawer(false)}>
                 <div style = {{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '50px', flexDirection: 'column'}}>
-                    <AccountCircleIcon style = {{ width: '50px', height: '50px', cursor: 'pointer'}}/>
+                    <div style = {{ cursor: 'pointer'}} onClick={() => router.push('/Login')}>
+                        <AccountCircleIcon style = {{ width: '50px', height: '50px'}}/>
+                    </div>
 
-                    <div style = {{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '20px', marginBottom: '10px', cursor: 'pointer'}}>
+                    <div 
+                        style = {{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '20px', marginBottom: '10px', cursor: 'pointer'}} 
+                        onClick = {() => router.push('/Login')}>
                         <span style = {{ fontSize: '20px' }}>로그인 하기</span>
                     </div>
                 </div>
