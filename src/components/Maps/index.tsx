@@ -1,19 +1,10 @@
 'use client';
 import React, { useEffect, useState } from "react";
-import { GoogleMap, MarkerF, useJsApiLoader } from '@react-google-maps/api';
+import { Circle, GoogleMap, MarkerF, useJsApiLoader } from '@react-google-maps/api';
 
 import Center from "./center";
 
 const GoogleMaps = ():JSX.Element => {
-
-    /** 기본 지도 설정 값 */
-    const defaultProps = {
-        center: {
-            lat: 37.514575,
-            lng: 127.0495556
-        },
-        zoom: 11
-    };
 
     const [map, setMap] = useState(null);
 
@@ -99,13 +90,27 @@ const GoogleMaps = ():JSX.Element => {
                 <MarkerF position={{ lat: markerPosition.lat, lng: markerPosition.lng}} />
 
                 {markers.map((marker:any) => (
-                    <MarkerF 
-                        position={{ lat: marker.lat, lng: marker.lng}}
-                        key = {marker.lat}
-                        icon={{
-                            url: "img/marker.png",
-                            scaledSize: new window.google.maps.Size(36, 48),
-                        }}/>
+                    <>
+                        <MarkerF 
+                            position={{ lat: marker.lat, lng: marker.lng}}
+                            key = {marker.lat}
+                            icon={{
+                                url: "img/marker.png",
+                                scaledSize: new window.google.maps.Size(36, 48),
+                            }}/>
+                        <Circle
+                            center={{
+                                lat: marker.lat,
+                                lng: marker.lng
+                            }}
+                            radius={20}
+                            options={{
+                                strokeColor: '#0000ff',
+                                fillColor: '#0000ff',
+                                fillOpacity: 0.3
+                            }}
+                        />
+                    </>
                 ))}
 
                 <Center moveMap={moveCenterCurrentPosition} />
