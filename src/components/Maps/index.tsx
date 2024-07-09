@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState } from "react";
-import { Circle, GoogleMap, MarkerF, useJsApiLoader } from '@react-google-maps/api';
+import { Circle, GoogleMap, InfoWindow, MarkerF, useJsApiLoader } from '@react-google-maps/api';
 
 import Center from "./center";
 
@@ -91,14 +91,19 @@ const GoogleMaps = ():JSX.Element => {
 
                 {markers.map((marker:any) => (
                     <>
-                        <MarkerF 
+                        {/* <MarkerF 
                             position={{ lat: marker.lat, lng: marker.lng}}
                             key = {marker.lat}
                             icon={{
                                 url: "img/marker.png",
                                 scaledSize: new window.google.maps.Size(36, 48),
-                            }}/>
-                        <Circle
+                            }}/> */}
+                        <InfoWindow position={{ lat: marker.lat, lng: marker.lng }}>
+                            <div>
+                                <p>good!</p>
+                            </div>
+                        </InfoWindow>
+                        {/* <Circle
                             center={{
                                 lat: marker.lat,
                                 lng: marker.lng
@@ -109,7 +114,7 @@ const GoogleMaps = ():JSX.Element => {
                                 fillColor: '#0000ff',
                                 fillOpacity: 0.3
                             }}
-                        />
+                        /> */}
                     </>
                 ))}
 
