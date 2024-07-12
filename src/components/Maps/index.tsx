@@ -11,21 +11,25 @@ const GoogleMaps = ():JSX.Element => {
     const [currentPosition, setCurrentPosition] = useState<any>({});
     const [markerPosition, setMarkerPosition] = useState<any>({});
 
-    const [markers, setMarkers] = useState<any>([]);
+    const [clickPosition, setClickPosition] = useState<any>(null);
+    const [showInfo, setShowInfo] = useState<boolean>(false);
+    const [showMarkers, setShowMarkers] = useState<boolean>(false);
+    const [markers, setMarkers] = useState<any>(null);
 
     /** 구글 맵 클릭 시 marker를 설정하는 함수 */
     const onMapClick = (e: any) => {
-        setMarkers((current: any) => [
-            ...current,
+        setClickPosition(
             {
                 lat: e.latLng.lat(),
                 lng: e.latLng.lng()
             }
-        ]);
+        );
+        setShowInfo(true);
         setCurrentPosition({lat: e.latLng.lat(), lng: e.latLng.lng()})
 
 
     }
+
 
     useEffect(() => {
         if(navigator.geolocation) {
@@ -89,34 +93,64 @@ const GoogleMaps = ():JSX.Element => {
 
                 <MarkerF position={{ lat: markerPosition.lat, lng: markerPosition.lng}} />
 
-                {markers.map((marker:any) => (
+                {showInfo && (
+
                     <>
-                        {/* <MarkerF 
-                            position={{ lat: marker.lat, lng: marker.lng}}
-                            key = {marker.lat}
+                        <InfoWindow position={{ lat: clickPosition.lat, lng: clickPosition.lng }} onCloseClick={() => setShowInfo(false)}>
+                            <>
+                                <div style = {{ textAlign: 'center', fontSize: '20px'}}>
+                                    목적지로 설정하시겠습니까?
+                                </div>
+
+                                <div style = {{ marginTop: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                                    <div></div>
+
+                                    <div style={{ display: 'flex', alignItems: 'center'}}>
+                                        <div 
+                                            style = {{ cursor: 'pointer', border: '1px solid #000', borderRadius: '8px', 
+                                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                                        padding: '10px 20px'}}
+                                            
+                                            onClick={() => setShowInfo(false)}>
+                                            취소
+                                        </div>
+
+                                        <div 
+                                            style = {{ marginLeft: '10px', cursor: 'pointer', border: '1px solid #000', 
+                                                        borderRadius: '8px', display: 'flex', alignItems: 'center', 
+                                                        justifyContent: 'center', padding: '10px 20px'}}
+                                            onClick={(e: any) => {
+                                                    setShowMarkers(true);
+                                                    setMarkers({ lat: clickPosition.lat, lng: clickPosition.lng });
+                                                    setShowInfo(false);
+                                                    }}>
+                                            설정
+                                        </div>
+                                    </div>
+                                </div>
+                            </>
+                        </InfoWindow>
+                    </>
+                )}
+                {markers !== null && (
+                    <>
+                        <MarkerF 
+                            position={{ lat: markers.lat, lng: markers.lng}}
                             icon={{
                                 url: "img/marker.png",
                                 scaledSize: new window.google.maps.Size(36, 48),
-                            }}/> */}
-                        <InfoWindow position={{ lat: marker.lat, lng: marker.lng }}>
-                            <div>
-                                <p>good!</p>
-                            </div>
-                        </InfoWindow>
-                        {/* <Circle
-                            center={{
-                                lat: marker.lat,
-                                lng: marker.lng
-                            }}
-                            radius={20}
+                            }}/>
+                        <Circle
+                            center={{ lat: markers.lat, lng: markers.lng }}
+                            radius={100}
                             options={{
-                                strokeColor: '#0000ff',
-                                fillColor: '#0000ff',
-                                fillOpacity: 0.3
+                                strokeColor: '#0000FF',
+                                fillColor: '#0000FF',
+                                fillOpacity: 0.3,
                             }}
-                        /> */}
+                        />
                     </>
-                ))}
+                )}
 
                 <Center moveMap={moveCenterCurrentPosition} />
             </GoogleMap>
