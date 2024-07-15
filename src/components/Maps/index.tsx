@@ -13,8 +13,8 @@ const GoogleMaps = ():JSX.Element => {
 
     const [clickPosition, setClickPosition] = useState<any>(null);
     const [showInfo, setShowInfo] = useState<boolean>(false);
-    const [showMarkers, setShowMarkers] = useState<boolean>(false);
     const [markers, setMarkers] = useState<any>(null);
+    const [circlePosition, setCirclePosition] = useState<any>(null);
 
     /** 구글 맵 클릭 시 marker를 설정하는 함수 */
     const onMapClick = (e: any) => {
@@ -120,8 +120,8 @@ const GoogleMaps = ():JSX.Element => {
                                                         borderRadius: '8px', display: 'flex', alignItems: 'center', 
                                                         justifyContent: 'center', padding: '10px 20px'}}
                                             onClick={(e: any) => {
-                                                    setShowMarkers(true);
                                                     setMarkers({ lat: clickPosition.lat, lng: clickPosition.lng });
+                                                    setCirclePosition({ lat: clickPosition.lat, lng: clickPosition.lng });
                                                     setShowInfo(false);
                                                     }}>
                                             설정
@@ -133,24 +133,26 @@ const GoogleMaps = ():JSX.Element => {
                     </>
                 )}
                 {markers !== null && (
-                    <>
-                        <MarkerF 
-                            position={{ lat: markers.lat, lng: markers.lng}}
-                            icon={{
-                                url: "img/marker.png",
-                                scaledSize: new window.google.maps.Size(36, 48),
-                            }}/>
-                        <Circle
-                            center={{ lat: markers.lat, lng: markers.lng }}
-                            radius={100}
-                            options={{
-                                strokeColor: '#0000FF',
-                                fillColor: '#0000FF',
-                                fillOpacity: 0.3,
-                            }}
-                        />
-                    </>
+                    <MarkerF 
+                        position={{ lat: markers.lat, lng: markers.lng}}
+                        icon={{
+                            url: "img/marker.png",
+                            scaledSize: new window.google.maps.Size(36, 48),
+                    }}/>
                 )}
+                {circlePosition !== null && (
+                    <Circle
+                        center={{ lat: circlePosition.lat, lng: circlePosition.lng }}
+                        radius={100}
+                        options={{
+                            strokeColor: '#0000FF',
+                            fillColor: '#0000FF',
+                            fillOpacity: 0.3,
+                        }}
+                    />
+                )
+
+                }
 
                 <Center moveMap={moveCenterCurrentPosition} />
             </GoogleMap>
