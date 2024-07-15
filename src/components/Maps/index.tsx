@@ -30,7 +30,7 @@ const GoogleMaps = ():JSX.Element => {
 
     }
 
-
+    /** 화면 렌더링 시 현재 위치를 불러오는 함수를 실행하는 useEffect */
     useEffect(() => {
         if(navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(getCurrentPositionSuccess)
@@ -81,6 +81,11 @@ const GoogleMaps = ():JSX.Element => {
         setMap(null)
     }, [])
 
+    /** 거리 선택지로 원 범위를 정하는 함수 */
+    const [rangeCircle, setRangeCircle] = useState<number>(0);
+
+    const [range, setRange] = useState<number>(0);
+
     return isLoaded ? (
         <>
             <GoogleMap
@@ -99,7 +104,33 @@ const GoogleMaps = ():JSX.Element => {
                         <InfoWindow position={{ lat: clickPosition.lat, lng: clickPosition.lng }} onCloseClick={() => setShowInfo(false)}>
                             <>
                                 <div style = {{ textAlign: 'center', fontSize: '20px'}}>
-                                    목적지로 설정하시겠습니까?
+                                    알람 범위를 설정해주세요.
+                                </div>
+
+                                <div style = {{ marginTop: '10px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
+                                    <div style = {{ display: 'flex', alignItems: 'center'}}>
+                                        <input type="radio" checked = {rangeCircle === 10} value={10} onChange={() => setRangeCircle(10)}/> 
+
+                                        <div style = {{ marginLeft: '10px', fontSize: '16px' }}>10m</div>
+                                    </div>
+
+                                    <div style = {{ display: 'flex', alignItems: 'center'}}>
+                                        <input type="radio" checked = {rangeCircle === 50} value={50} onChange={() => setRangeCircle(50)}/> 
+
+                                        <div style = {{ marginLeft: '10px', fontSize: '16px' }}>50m</div>
+                                    </div>
+
+                                    <div style = {{ display: 'flex', alignItems: 'center'}}>
+                                        <input type="radio" checked = {rangeCircle === 100} value={100} onChange={() => setRangeCircle(100)}/> 
+
+                                        <div style = {{ marginLeft: '10px', fontSize: '16px' }}>100m</div>
+                                    </div>
+
+                                    <div style = {{ display: 'flex', alignItems: 'center'}}>
+                                        <input type="radio" checked = {rangeCircle === 500} value={500} onChange={() => setRangeCircle(500)}/> 
+
+                                        <div style = {{ marginLeft: '10px', fontSize: '16px' }}>500m</div>
+                                    </div>
                                 </div>
 
                                 <div style = {{ marginTop: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
@@ -111,7 +142,10 @@ const GoogleMaps = ():JSX.Element => {
                                                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                                                         padding: '10px 20px'}}
                                             
-                                            onClick={() => setShowInfo(false)}>
+                                            onClick={() => {
+                                                setRangeCircle(0);
+                                                setShowInfo(false);
+                                                }}>
                                             취소
                                         </div>
 
@@ -123,6 +157,8 @@ const GoogleMaps = ():JSX.Element => {
                                                     setMarkers({ lat: clickPosition.lat, lng: clickPosition.lng });
                                                     setCirclePosition({ lat: clickPosition.lat, lng: clickPosition.lng });
                                                     setShowInfo(false);
+                                                    setRange(rangeCircle);
+                                                    setRangeCircle(0);
                                                     }}>
                                             설정
                                         </div>
@@ -143,7 +179,7 @@ const GoogleMaps = ():JSX.Element => {
                 {circlePosition !== null && (
                     <Circle
                         center={{ lat: circlePosition.lat, lng: circlePosition.lng }}
-                        radius={100}
+                        radius={range === 10 ? 10 : range === 50 ? 50 : range === 100 ? 100 : 500}
                         options={{
                             strokeColor: '#0000FF',
                             fillColor: '#0000FF',
