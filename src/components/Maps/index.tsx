@@ -43,7 +43,10 @@ const GoogleMaps = (): JSX.Element => {
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(getCurrentPositionSuccess);
-      navigator.geolocation.getCurrentPosition(setUserMarkerPosition);
+
+      setInterval(() => {
+        navigator.geolocation.getCurrentPosition(setUserMarkerPosition);
+      }, 1000);
     }
   }, []);
 
@@ -94,6 +97,23 @@ const GoogleMaps = (): JSX.Element => {
   const [rangeCircle, setRangeCircle] = useState<number>(0);
 
   const [range, setRange] = useState<number>(0);
+
+  /** 원 안에 현재 위치 마커가 들어왔는지 감지하는 함수 */
+  useEffect(() => {
+    setInterval(() => {
+      if (range !== 0) {
+        if (
+          Math.pow(range, 2) >=
+          Math.pow(circlePosition.lat - markerPosition.lat, 2) +
+            Math.pow(circlePosition.lng - markerPosition.lng, 2)
+        ) {
+          if (confirm("목적지 부근에 도착하였습니다.")) {
+            location.href = "http://localhost:3000";
+          }
+        }
+      }
+    }, 2000);
+  }, [range]);
 
   return isLoaded ? (
     <>
